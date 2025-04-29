@@ -1,6 +1,7 @@
 
 import { Duration } from "../model/Duration.js";
 import { RaceResult } from "../model/RaceResult.js";
+import fs from "fs";
 
 /**
  * This class handle the race results management system.
@@ -23,6 +24,7 @@ export class RaceResultsService {
    */
   addRaceResult(result) {
     // TODO
+    this._raceResults.push(result);
   }
 
   /**
@@ -31,6 +33,8 @@ export class RaceResultsService {
    */
   saveToFile(filePath) {
     // TODO
+    const data = JSON.stringify(this._raceResults, null, 2);
+    fs.writeFileSync(filePath, data, 'utf8');
   }
 
   /**
@@ -40,6 +44,16 @@ export class RaceResultsService {
    */
   loadFromFile(filePath) {
     // TODO
+    try{
+      const data = fs.readFileSync(filePath, 'utf8');
+      const parsedData = JSON.parse(data);
+      this._raceResults = parsedData.map(item => new RaceResult(item.participantId, item.sport, new Duration(item.Duration))
+    );
+    return true;
+    }catch(e){
+        console.error("Error loading file:", e);
+        return false;
+    }
   }
 
   /**
@@ -50,6 +64,9 @@ export class RaceResultsService {
    */
   getTimeForParticipant(participantId, sport) {
        // TODO
+       const result = this._raceResults.find(r => r.participantID === participantId && r.sportType === sport
+      );
+      return result ? result.daration : null;
   }
 
   /**
@@ -59,5 +76,11 @@ export class RaceResultsService {
    */
   getTotalTimeForParticipant(participantId) {
         // TODO
+        const particicpantResults = this._raceResults.filter(r =>r.participantID === participantId );
+        if(particicpantResults.length === 0){
+          return new Duration(0);
+        }
+        const totalSeconds = particicpantResults.reduce((sum,result) => sum + result.duration._totalSeconds, 0);
+        return new Duration(totalSeconds);
   }
 }

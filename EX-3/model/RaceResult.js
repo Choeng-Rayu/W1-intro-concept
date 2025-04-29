@@ -4,5 +4,22 @@ import { Duration } from "./Duration.js";
  */
 export class RaceResult {
 
-       // TODO
-  }
+          // TODO
+          participantID;
+          sportType;
+          duration;
+          constructor(participantID, sportType, duration){
+          this.participantID = participantID;
+          this.sportType = sportType;
+          this.duration = duration;
+          }
+          toJSON(){
+          return {
+                    participantID: this.participantID,
+                    sportType: this.sportType,
+                    duration: this.duration._totalSeconds
+          };
+     }
+
+}
+  
