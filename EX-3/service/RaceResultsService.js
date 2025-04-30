@@ -43,16 +43,20 @@ export class RaceResultsService {
    * @returns {boolean} True if loading was successful, false otherwise.
    */
   loadFromFile(filePath) {
-    // TODO
-    try{
+    try {
       const data = fs.readFileSync(filePath, 'utf8');
       const parsedData = JSON.parse(data);
-      this._raceResults = parsedData.map(item => new RaceResult(item.participantId, item.sport, new Duration(item.Duration))
-    );
-    return true;
-    }catch(e){
-        console.error("Error loading file:", e);
-        return false;
+      this._raceResults = parsedData.map(
+        item => new RaceResult(
+          item.participantID, 
+          item.sportType, 
+          new Duration(item.duration)
+        )
+      );
+      return true;
+    } catch (e) {
+      console.error("Error loading file:", e);
+      return false;
     }
   }
 
@@ -66,7 +70,7 @@ export class RaceResultsService {
        // TODO
        const result = this._raceResults.find(r => r.participantID === participantId && r.sportType === sport
       );
-      return result ? result.daration : null;
+      return result ? result.duration : null;
   }
 
   /**
